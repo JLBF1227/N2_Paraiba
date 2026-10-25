@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Extração de Dados de Nota Fiscal</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <main class="container">
+
+        <header class="header">
+            <h1>Extração de Dados de Nota Fiscal</h1>
+
+            <p>
+                Carregue um PDF de nota fiscal e extraia os dados
+                automaticamente utilizando IA.
+            </p>
+        </header>
+
+        <section class="upload-card">
+
+            <div class="upload-title">
+                <span>📄</span>
+                <h2>Upload do PDF</h2>
+            </div>
+
+            <div class="upload-area">
+
+                <label for="pdfInput">
+                    Selecione o arquivo PDF da nota fiscal
+                </label>
+
+                <div class="file-input-container">
+
+                    <input
+                        type="file"
+                        id="pdfInput"
+                        accept=".pdf"
+                        hidden
+                    >
+
+                    <button
+                        type="button"
+                        id="selectFileButton"
+                        class="select-file-button"
+                    >
+                        Escolher arquivo
+                    </button>
+
+                    <span id="fileName">
+                        Nenhum arquivo selecionado
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div
+                id="selectedFile"
+                class="selected-file hidden"
+            >
+
+                <div class="file-info">
+
+                    <span class="file-icon">📄</span>
+
+                    <div>
+                        <strong id="selectedFileName"></strong>
+                        <small id="selectedFileSize"></small>
+                    </div>
+
+                </div>
+
+                <button
+                    type="button"
+                    id="removeFileButton"
+                    class="remove-button"
+                    title="Remover arquivo"
+                >
+                    ×
+                </button>
+
+            </div>
+
+            <button
+                type="button"
+                id="extractButton"
+                class="extract-button"
+                disabled
+            >
+                <span>◉</span>
+                EXTRAIR DADOS
+            </button>
+
+        </section>
+
+
+        <!-- Resultado da extração -->
+
+        <section
+            id="resultSection"
+            class="result-card hidden"
+        >
+
+            <div class="result-header">
+
+                <h2>Dados Extraídos</h2>
+
+                <button
+                    type="button"
+                    id="copyButton"
+                    class="copy-button"
+                >
+                    📋 Copiar JSON
+                </button>
+
+            </div>
+
+            <div class="json-title">
+                &lt;/&gt; Dados em JSON
+            </div>
+
+            <pre id="jsonResult"></pre>
+
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

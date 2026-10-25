@@ -1,0 +1,30 @@
+# Segredos e variáveis de ambiente
+.env
+**/.env
+.env.*
+**/.env.*
+!.env.example
+!**/.env.example
+
+# Ambientes virtuais e dependências locais de Python
+.venv/
+venv/
+env/
+BackEnd/Lib/
+BackEnd/Scripts/
+
+# Arquivos gerados pelo Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Configurações locais de editores e sistemas
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Arquivos locais de banco de dados
+*.sqlite
+*.sqlite3
+*.db

@@ -1,0 +1,341 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f5f6f8;
+    color: #1f2937;
+}
+
+.container {
+    width: 90%;
+    max-width: 900px;
+    margin: 50px auto;
+}
+
+
+/* =========================
+   CABEÇALHO
+========================= */
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 30px;
+    margin-bottom: 10px;
+    color: #111827;
+}
+
+.header p {
+    font-size: 15px;
+    color: #6b7280;
+}
+
+
+/* =========================
+   CARD DE UPLOAD
+========================= */
+
+.upload-card,
+.result-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 25px;
+
+    border: 1px solid #e5e7eb;
+
+    box-shadow:
+        0 3px 10px rgba(0, 0, 0, 0.05);
+
+    margin-bottom: 25px;
+}
+
+.upload-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 25px;
+}
+
+.upload-title h2 {
+    font-size: 18px;
+}
+
+
+/* =========================
+   INPUT
+========================= */
+
+.upload-area label {
+    display: block;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    margin-bottom: 10px;
+}
+
+.file-input-container {
+    display: flex;
+    align-items: center;
+
+    background-color: #f3f4f6;
+
+    border-radius: 7px;
+
+    overflow: hidden;
+
+    min-height: 45px;
+}
+
+.select-file-button {
+    border: none;
+
+    background-color: #e5e7eb;
+
+    padding: 14px 18px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+.select-file-button:hover {
+    background-color: #d1d5db;
+}
+
+#fileName {
+    padding: 0 15px;
+
+    color: #6b7280;
+
+    font-size: 14px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =========================
+   ARQUIVO SELECIONADO
+========================= */
+
+.selected-file {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-top: 15px;
+
+    padding: 12px 15px;
+
+    background-color: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 7px;
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+.file-icon {
+    font-size: 24px;
+}
+
+.file-info strong {
+    display: block;
+
+    font-size: 14px;
+
+    margin-bottom: 4px;
+}
+
+.file-info small {
+    color: #6b7280;
+}
+
+.remove-button {
+    border: none;
+    background: none;
+
+    font-size: 24px;
+
+    cursor: pointer;
+
+    color: #6b7280;
+}
+
+.remove-button:hover {
+    color: #dc2626;
+}
+
+
+/* =========================
+   BOTÃO EXTRAIR
+========================= */
+
+.extract-button {
+    width: 100%;
+
+    margin-top: 20px;
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background-color: #111827;
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.extract-button:hover:not(:disabled) {
+    background-color: #000;
+}
+
+.extract-button:disabled {
+    background-color: #9ca3af;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================
+   RESULTADO
+========================= */
+
+.result-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.result-header h2 {
+    font-size: 18px;
+}
+
+.copy-button {
+    padding: 8px 12px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 6px;
+
+    background-color: white;
+
+    cursor: pointer;
+}
+
+.copy-button:hover {
+    background-color: #f3f4f6;
+}
+
+.json-title {
+    font-weight: bold;
+
+    margin-bottom: 12px;
+}
+
+
+/* =========================
+   JSON
+========================= */
+
+#jsonResult {
+    background-color: #111827;
+
+    color: #86efac;
+
+    padding: 20px;
+
+    border-radius: 8px;
+
+    min-height: 250px;
+    max-height: 500px;
+
+    overflow: auto;
+
+    font-family:
+        Consolas,
+        Monaco,
+        monospace;
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+
+/* =========================
+   UTILIDADES
+========================= */
+
+.hidden {
+    display: none;
+}
+
+
+/* =========================
+   RESPONSIVO
+========================= */
+
+@media (max-width: 600px) {
+
+    .container {
+        width: 95%;
+        margin: 25px auto;
+    }
+
+    .header h1 {
+        font-size: 24px;
+    }
+
+    .file-input-container {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .select-file-button {
+        width: 100%;
+    }
+
+    #fileName {
+        padding: 12px;
+    }
+
+    .result-header {
+        gap: 15px;
+
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+}
