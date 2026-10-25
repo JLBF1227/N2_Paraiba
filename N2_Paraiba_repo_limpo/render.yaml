@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: n2-paraiba
+    runtime: python
+    buildCommand: pip install -r BackEnd/requirements.txt
+    startCommand: python -m uvicorn BackEnd.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.5
+      - key: ENVIRONMENT
+        value: production
+      - key: GEMINI_MODEL
+        value: gemini-3.5-flash-lite
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: APP_LOGIN
+        sync: false
+      - key: APP_PASSWORD
+        sync: false
+      - key: APP_SECRET_KEY
+        generateValue: true

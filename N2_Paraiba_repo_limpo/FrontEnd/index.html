@@ -1,139 +1,266 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Extração de Dados de Nota Fiscal</title>
-
+    <meta name="theme-color" content="#123d2b">
+    <title>Projeto Administrativo-Financeiro | UniRV</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
-
 <body>
+    <section id="loginScreen" class="login-screen">
+        <form id="loginForm" class="login-card">
+            <div class="brand-mark">AF</div>
+            <p class="eyebrow">UNIRV · PROJETO N2</p>
+            <h1>Projeto Administrativo-Financeiro</h1>
+            <p class="muted">Entre para consultar cadastros e registrar contas a pagar.</p>
+            <label for="loginInput">Login</label>
+            <input id="loginInput" name="login" autocomplete="username" required>
+            <label for="passwordInput">Senha</label>
+            <input id="passwordInput" name="senha" type="password" autocomplete="current-password" required>
+            <p id="loginMessage" class="form-message" role="alert"></p>
+            <button class="button primary full-width" type="submit">Entrar</button>
+            <p class="login-footnote">As credenciais são configuradas no ambiente do servidor.</p>
+        </form>
+    </section>
 
-    <main class="container">
-
-        <header class="header">
-            <h1>Extração de Dados de Nota Fiscal</h1>
-
-            <p>
-                Carregue um PDF de nota fiscal e extraia os dados
-                automaticamente utilizando IA.
-            </p>
+    <div id="appShell" class="app-shell hidden">
+        <header class="topbar">
+            <div class="brand-block">
+                <div class="brand-mark small">AF</div>
+                <div>
+                    <div class="brand-title">Administrativo-Financeiro</div>
+                    <div class="brand-subtitle">UniRV · Processamento de notas fiscais</div>
+                </div>
+            </div>
+            <div class="topbar-tools">
+                <div class="version-info">
+                    <span class="version-label">Última atualização do código no GitHub</span>
+                    <code id="versionText">Carregando...</code>
+                </div>
+                <button id="logoutButton" class="button outline small-button" type="button">Sair</button>
+            </div>
         </header>
 
-        <section class="upload-card">
+        <nav class="main-nav" aria-label="Navegação principal">
+            <button class="nav-button active" data-view="extracao" type="button">Extrair nota</button>
+            <button class="nav-button" data-view="pessoas" type="button">Pessoas</button>
+            <button class="nav-button" data-view="classificacoes" type="button">Classificações</button>
+            <button class="nav-button" data-view="contas" type="button">Contas a pagar</button>
+        </nav>
 
-            <div class="upload-title">
-                <span>📄</span>
-                <h2>Upload do PDF</h2>
-            </div>
-
-            <div class="upload-area">
-
-                <label for="pdfInput">
-                    Selecione o arquivo PDF da nota fiscal
-                </label>
-
-                <div class="file-input-container">
-
-                    <input
-                        type="file"
-                        id="pdfInput"
-                        accept=".pdf"
-                        hidden
-                    >
-
-                    <button
-                        type="button"
-                        id="selectFileButton"
-                        class="select-file-button"
-                    >
-                        Escolher arquivo
-                    </button>
-
-                    <span id="fileName">
-                        Nenhum arquivo selecionado
-                    </span>
-
+        <main class="container">
+            <section id="view-extracao" class="view-section">
+                <div class="page-heading">
+                    <div>
+                        <p class="eyebrow">ETAPA 2 · CONTAS A PAGAR</p>
+                        <h1>Extração e análise da nota fiscal</h1>
+                        <p class="muted">Envie um PDF, confira os dados identificados pela IA e consulte os registros cadastrados.</p>
+                    </div>
                 </div>
 
-            </div>
-
-            <div
-                id="selectedFile"
-                class="selected-file hidden"
-            >
-
-                <div class="file-info">
-
-                    <span class="file-icon">📄</span>
-
-                    <div>
-                        <strong id="selectedFileName"></strong>
-                        <small id="selectedFileSize"></small>
+                <section class="panel upload-card">
+                    <div class="section-heading">
+                        <div class="section-icon">PDF</div>
+                        <div>
+                            <h2>Upload da nota fiscal</h2>
+                            <p class="muted">Arquivo PDF de até 20 MB.</p>
+                        </div>
                     </div>
 
+                    <div class="upload-area">
+                        <label for="pdfInput">Selecione o arquivo PDF</label>
+                        <div class="file-input-container">
+                            <input type="file" id="pdfInput" accept="application/pdf,.pdf" hidden>
+                            <button type="button" id="selectFileButton" class="button outline">Escolher arquivo</button>
+                            <span id="fileName" class="file-name">Nenhum arquivo selecionado</span>
+                        </div>
+                    </div>
+
+                    <div id="selectedFile" class="selected-file hidden">
+                        <div class="file-info">
+                            <span class="file-icon">PDF</span>
+                            <div>
+                                <strong id="selectedFileName"></strong>
+                                <small id="selectedFileSize"></small>
+                            </div>
+                        </div>
+                        <button type="button" id="removeFileButton" class="remove-button" title="Remover arquivo" aria-label="Remover arquivo">×</button>
+                    </div>
+
+                    <button type="button" id="extractButton" class="button primary full-width" disabled>Extrair dados com Gemini</button>
+                    <p id="extractMessage" class="form-message" role="status"></p>
+                </section>
+
+                <section id="resultSection" class="panel result-card hidden">
+                    <div class="section-heading between">
+                        <div>
+                            <h2>Dados extraídos</h2>
+                            <p class="muted">Confira o JSON gerado antes de lançar a conta.</p>
+                        </div>
+                        <button type="button" id="copyButton" class="button outline">Copiar JSON</button>
+                    </div>
+                    <div class="json-title">&lt;/&gt; Resposta estruturada</div>
+                    <pre id="jsonResult" class="json-result"></pre>
+
+                    <div id="analysisSection" class="analysis-section hidden">
+                        <div class="section-heading">
+                            <div>
+                                <h2>Consulta ao banco de dados</h2>
+                                <p class="muted">O sistema verifica fornecedor, faturado e classificação da despesa.</p>
+                            </div>
+                        </div>
+                        <div id="analysisResults" class="analysis-grid"></div>
+                        <div class="register-actions">
+                            <p id="registrationMessage" class="form-message" role="status"></p>
+                            <button id="registerButton" class="button primary" type="button">Cadastrar o que falta e lançar conta a pagar</button>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <section id="view-pessoas" class="view-section hidden">
+                <div class="page-heading">
+                    <div>
+                        <p class="eyebrow">CADASTROS</p>
+                        <h1>Pessoas</h1>
+                        <p class="muted">Gerencie fornecedores/clientes e faturados. Os registros são inativados, nunca excluídos definitivamente.</p>
+                    </div>
+                    <button id="newPersonButton" class="button primary" type="button">+ Nova pessoa</button>
                 </div>
+                <section class="panel">
+                    <div class="search-row">
+                        <div class="search-field">
+                            <label for="personSearch">Buscar por nome, tipo, CPF ou CNPJ</label>
+                            <input id="personSearch" placeholder="Digite um ou mais termos...">
+                        </div>
+                        <div class="search-field type-filter">
+                            <label for="personTypeFilter">Tipo</label>
+                            <select id="personTypeFilter">
+                                <option value="">Todos os tipos</option>
+                                <option value="CLIENTE-FORNECEDOR">Cliente/Fornecedor</option>
+                                <option value="FATURADO">Faturado</option>
+                            </select>
+                        </div>
+                        <div class="search-buttons">
+                            <button id="searchPeopleButton" class="button primary" type="button">Buscar</button>
+                            <button id="allPeopleButton" class="button outline" type="button">Todos ativos</button>
+                            <button id="inactivePeopleButton" class="button outline" type="button">Inativos</button>
+                        </div>
+                    </div>
+                    <div class="table-title-row"><h2>Lista de pessoas</h2><span id="peopleCount" class="count-label">Nenhuma consulta realizada</span></div>
+                    <div class="table-wrap"><table id="peopleTable" class="data-table"></table></div>
+                    <p id="peopleEmpty" class="empty-state">Use a busca ou “Todos ativos” para carregar os registros.</p>
+                </section>
+            </section>
 
-                <button
-                    type="button"
-                    id="removeFileButton"
-                    class="remove-button"
-                    title="Remover arquivo"
-                >
-                    ×
-                </button>
+            <section id="view-classificacoes" class="view-section hidden">
+                <div class="page-heading">
+                    <div>
+                        <p class="eyebrow">CADASTROS</p>
+                        <h1>Classificações</h1>
+                        <p class="muted">Cadastre classificações de despesa ou receita e mantenha os registros inativos disponíveis para reativação.</p>
+                    </div>
+                    <button id="newClassificationButton" class="button primary" type="button">+ Nova classificação</button>
+                </div>
+                <section class="panel">
+                    <div class="search-row">
+                        <div class="search-field">
+                            <label for="classificationSearch">Buscar por descrição</label>
+                            <input id="classificationSearch" placeholder="Ex.: MANUTENÇÃO E OPERAÇÃO">
+                        </div>
+                        <div class="search-field type-filter">
+                            <label for="classificationTypeFilter">Tipo</label>
+                            <select id="classificationTypeFilter">
+                                <option value="">Todos os tipos</option>
+                                <option value="DESPESA">Despesa</option>
+                                <option value="RECEITA">Receita</option>
+                            </select>
+                        </div>
+                        <div class="search-buttons">
+                            <button id="searchClassificationsButton" class="button primary" type="button">Buscar</button>
+                            <button id="allClassificationsButton" class="button outline" type="button">Todos ativos</button>
+                            <button id="inactiveClassificationsButton" class="button outline" type="button">Inativos</button>
+                        </div>
+                    </div>
+                    <div class="table-title-row"><h2>Lista de classificações</h2><span id="classificationsCount" class="count-label">Nenhuma consulta realizada</span></div>
+                    <div class="table-wrap"><table id="classificationsTable" class="data-table"></table></div>
+                    <p id="classificationsEmpty" class="empty-state">Use a busca ou “Todos ativos” para carregar os registros.</p>
+                </section>
+            </section>
 
+            <section id="view-contas" class="view-section hidden">
+                <div class="page-heading">
+                    <div>
+                        <p class="eyebrow">MOVIMENTOS FINANCEIROS</p>
+                        <h1>Contas a pagar</h1>
+                        <p class="muted">Consulte lançamentos criados após a análise das notas fiscais.</p>
+                    </div>
+                </div>
+                <section class="panel">
+                    <div class="search-row accounts-search-row">
+                        <div class="search-field">
+                            <label for="accountSearch">Buscar por nota, fornecedor, faturado, produto ou despesa</label>
+                            <input id="accountSearch" placeholder="Digite um ou mais termos...">
+                        </div>
+                        <div class="search-buttons">
+                            <button id="searchAccountsButton" class="button primary" type="button">Buscar</button>
+                            <button id="allAccountsButton" class="button outline" type="button">Todas as contas ativas</button>
+                        </div>
+                    </div>
+                    <div class="table-title-row"><h2>Movimentos registrados</h2><span id="accountsCount" class="count-label">Nenhuma consulta realizada</span></div>
+                    <div class="table-wrap"><table id="accountsTable" class="data-table"></table></div>
+                    <p id="accountsEmpty" class="empty-state">Use a busca ou “Todas as contas ativas” para carregar os lançamentos.</p>
+                </section>
+            </section>
+
+            <footer class="app-footer">
+                <span>Projeto Administrativo-Financeiro · UniRV</span>
+                <span id="footerVersion">Código: carregando...</span>
+            </footer>
+        </main>
+    </div>
+
+    <dialog id="personDialog" class="form-dialog">
+        <form id="personForm">
+            <div class="dialog-heading">
+                <div><p class="eyebrow">CADASTRO</p><h2 id="personDialogTitle">Nova pessoa</h2></div>
+                <button type="button" class="dialog-close" data-close-dialog="personDialog" aria-label="Fechar">×</button>
             </div>
-
-            <button
-                type="button"
-                id="extractButton"
-                class="extract-button"
-                disabled
-            >
-                <span>◉</span>
-                EXTRAIR DADOS
-            </button>
-
-        </section>
-
-
-        <!-- Resultado da extração -->
-
-        <section
-            id="resultSection"
-            class="result-card hidden"
-        >
-
-            <div class="result-header">
-
-                <h2>Dados Extraídos</h2>
-
-                <button
-                    type="button"
-                    id="copyButton"
-                    class="copy-button"
-                >
-                    📋 Copiar JSON
-                </button>
-
+            <input id="personId" type="hidden">
+            <label for="personFormType">Tipo *</label>
+            <select id="personFormType" required>
+                <option value="CLIENTE-FORNECEDOR">Cliente/Fornecedor</option>
+                <option value="FATURADO">Faturado</option>
+            </select>
+            <label for="personName">Nome / Razão social *</label>
+            <input id="personName" required maxlength="255">
+            <label for="personFantasy">Nome fantasia</label>
+            <input id="personFantasy" maxlength="255">
+            <div class="form-grid">
+                <div><label for="personCnpj">CNPJ</label><input id="personCnpj" inputmode="numeric" maxlength="18"></div>
+                <div><label for="personCpf">CPF</label><input id="personCpf" inputmode="numeric" maxlength="14"></div>
             </div>
+            <p id="personFormMessage" class="form-message" role="alert"></p>
+            <div class="dialog-actions"><button type="button" class="button outline" data-close-dialog="personDialog">Cancelar</button><button type="submit" class="button primary">Salvar</button></div>
+        </form>
+    </dialog>
 
-            <div class="json-title">
-                &lt;/&gt; Dados em JSON
+    <dialog id="classificationDialog" class="form-dialog">
+        <form id="classificationForm">
+            <div class="dialog-heading">
+                <div><p class="eyebrow">CADASTRO</p><h2 id="classificationDialogTitle">Nova classificação</h2></div>
+                <button type="button" class="dialog-close" data-close-dialog="classificationDialog" aria-label="Fechar">×</button>
             </div>
-
-            <pre id="jsonResult"></pre>
-
-        </section>
-
-    </main>
-
-    <script src="script.js"></script>
-
+            <input id="classificationId" type="hidden">
+            <label for="classificationFormType">Tipo *</label>
+            <select id="classificationFormType" required><option value="DESPESA">Despesa</option><option value="RECEITA">Receita</option></select>
+            <label for="classificationDescription">Descrição *</label>
+            <input id="classificationDescription" maxlength="180" required>
+            <p id="classificationFormMessage" class="form-message" role="alert"></p>
+            <div class="dialog-actions"><button type="button" class="button outline" data-close-dialog="classificationDialog">Cancelar</button><button type="submit" class="button primary">Salvar</button></div>
+        </form>
+    </dialog>
 </body>
-
 </html>
