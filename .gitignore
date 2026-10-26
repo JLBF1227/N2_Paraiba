@@ -1,0 +1,27 @@
+# Variáveis de ambiente e segredos
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+
+# Ambiente virtual Python
+.venv/
+venv/
+ENV/
+
+# Arquivos Python temporários
+__pycache__/
+*.py[cod]
+
+# Bancos locais
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs e arquivos do sistema
+*.log
+.DS_Store
+Thumbs.db
+Readme.txt
