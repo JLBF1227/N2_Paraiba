@@ -38,5 +38,3 @@ Não publique chaves de API, senhas ou arquivos `.env` no repositório.
 ## Repositório
 
 https://github.com/JLBF1227/N2_Paraiba
-
-O endereço da aplicação hospedada será informado após a conclusão da publicação.
